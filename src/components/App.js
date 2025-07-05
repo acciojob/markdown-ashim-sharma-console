@@ -1,37 +1,37 @@
-import React, { useState, useEffect } from "react";
-import ReactMarkdown from "react-markdown";
-import "./App.css";
+// src/components/MarkdownEditor.js
+import React, { useState, useEffect } from 'react';
+import ReactMarkdown from 'react-markdown';
 
-function Markdown() {
-  const [markdown, setMarkdown] = useState("");
-  const [loading, setLoading] = useState(true);
-
-  const handleChange = (e) => {
-    setMarkdown(e.target.value);
-  };
-
-  const changeLoadingVar = () => {
-    setLoading(false);
-  };
+const MarkdownEditor = () => {
+  const [markdown, setMarkdown] = useState('');
+  const [preview, setPreview] = useState('');
 
   useEffect(() => {
-    setTimeout(changeLoadingVar, 3000);
-  }, []);
+    // Update preview when markdown changes
+    const timeout = setTimeout(() => {
+      setPreview(markdown);
+    }, 100); // Slight delay for smoother UX
 
-  if (loading) {
-    return (
-      <div className="loading">
-        <h1>Loading...</h1>
-      </div>
-    );
-  }
+    return () => clearTimeout(timeout);
+  }, [markdown]);
 
   return (
-    <div className="app">
-      <textarea className="textarea" onChange={handleChange} />
-      <ReactMarkdown className="preview">{markdown}</ReactMarkdown>
+    <div className="editor-container">
+      <textarea
+        className="textarea"
+        value={markdown}
+        onChange={(e) => setMarkdown(e.target.value)}
+        placeholder="Enter Markdown text here..."
+      />
+      <div className="preview">
+        {preview === '' ? (
+          <div className="loading">Loading preview...</div>
+        ) : (
+          <ReactMarkdown>{preview}</ReactMarkdown>
+        )}
+      </div>
     </div>
   );
-}
+};
 
-export default Markdown;
+export default MarkdownEditor;
